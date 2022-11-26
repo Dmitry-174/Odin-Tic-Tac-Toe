@@ -50,8 +50,8 @@ main {
 }
 
 .win {
-    color: red;
+    color: #b91c1c;
     font-size: 4rem;
     font-weight: 900;
-    filter: brightness(90%);
+    background-color: #fde68a;
 }
