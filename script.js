@@ -41,6 +41,18 @@ const Player = (name, mark) => {
 }
 
 const GameController = (() => {
+    const WinConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+    let winner;
+    let isTie = false;
     let currentRound = 1;
     let currentPlayer;
     let clickedBtnIndex;
@@ -49,6 +61,24 @@ const GameController = (() => {
         clickedBtnIndex = index;
     };
 
+    const checkWinConditions = () => {
+        for (let condition of WinConditions) {
+            if (gameBoard.getMark(condition[0]) && gameBoard.getMark(condition[1]) &&
+                gameBoard.getMark(condition[2]) &&
+                gameBoard.getMark(condition[0]) === gameBoard.getMark(condition[1]) &&
+                gameBoard.getMark(condition[1]) === gameBoard.getMark(condition[2])) {
+                winner = currentPlayer;
+                for (let id of condition) {
+                    document.getElementById(id).classList.add('win');
+                }
+                
+            }
+        }
+        isTie = currentRound === 9;
+        console.log(isTie);
+    }
+
+
     const playRound = () => {
         if (currentRound % 2 === 1) {
             currentPlayer = player1;
@@ -56,13 +86,17 @@ const GameController = (() => {
             currentPlayer = player2;
         }
 
-        if (!gameBoard.getMark(clickedBtnIndex)) {
+        if (!gameBoard.getMark(clickedBtnIndex) &&
+            !winner && !isTie) {
             gameBoard.setMark(clickedBtnIndex, currentPlayer.getPlayerMark());
             renderGameBoard();
+            checkWinConditions();
             currentRound++;
         }
     };
-    
+
+
+
     return { playRound, setClickedBtnIndex };
 })();
 

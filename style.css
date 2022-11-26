@@ -48,3 +48,10 @@ main {
 .cell:hover {
     filter: brightness(95%);
 }
+
+.win {
+    color: red;
+    font-size: 4rem;
+    font-weight: 900;
+    filter: brightness(90%);
+}
