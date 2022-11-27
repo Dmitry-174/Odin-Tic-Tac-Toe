@@ -99,7 +99,7 @@ const GameController = (() => {
                 setTimeout(function () {
                     showWinMessage();
                     winnerEl.classList.add('active');
-                    winnerNameEl.textContent = currentPlayer.getPlayerName();
+                    winnerNameEl.textContent = winner.getPlayerName();
                 }, 500)
                 return;
             }
