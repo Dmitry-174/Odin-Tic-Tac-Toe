@@ -3,10 +3,6 @@
 const gameBoard = (() => {
     let board = new Array(9);
 
-    //let board = ['', '0', 'X',
-    //    '0', 'X', '0',
-    //    'X', '0', 'X'];
-
     const getMark = (index) => {
         return board[index];
     }
@@ -15,10 +11,31 @@ const gameBoard = (() => {
         board[index] = typeMark;
     }
 
-    return { getMark, setMark }
+    const reset = () => {
+        board = new Array(9);
+    }
+
+    return { getMark, setMark, reset }
 })();
 
 let gameBoardEl = document.querySelector('.game-board');
+let winnerEl = document.querySelector('.winner');
+let winnerNameEl = document.getElementById('winner');
+let tieEl = document.querySelector('.tie');
+let winMsgEl = document.querySelector('.win-message');
+let overlayEl = document.querySelector('.overlay');
+let resetBtn = document.querySelector('.reset');
+
+
+function showWinMessage() {
+    overlayEl.classList.add('active');
+    winMsgEl.classList.add('active');
+}
+
+function hideWinMessage() {
+    overlayEl.classList.remove('active');
+    winMsgEl.classList.remove('active');
+}
 
 function renderGameBoard() {
     while (gameBoardEl.firstChild) {
@@ -57,6 +74,14 @@ const GameController = (() => {
     let currentPlayer;
     let clickedBtnIndex;
 
+    const reset = () => {
+        winner = undefined;
+        isTie = false;
+        currentRound = 1;
+        currentPlayer = undefined;;
+        clickedBtnIndex = undefined;
+    }
+
     const setClickedBtnIndex = (index) => {
         clickedBtnIndex = index;
     };
@@ -71,11 +96,22 @@ const GameController = (() => {
                 for (let id of condition) {
                     document.getElementById(id).classList.add('win');
                 }
-                
+                setTimeout(function () {
+                    showWinMessage();
+                    winnerEl.classList.add('active');
+                    winnerNameEl.textContent = currentPlayer.getPlayerName();
+                }, 500)
+                return;
             }
         }
         isTie = currentRound === 9;
-        console.log(isTie);
+        if (isTie) {
+            setTimeout(function () {
+                showWinMessage();
+                tieEl.classList.add('active');
+            }, 500)
+        }
+
     }
 
 
@@ -95,13 +131,13 @@ const GameController = (() => {
         }
     };
 
-
-
-    return { playRound, setClickedBtnIndex };
+    return { playRound, setClickedBtnIndex, reset };
 })();
 
-const player1 = Player('player1', 'X');
-const player2 = Player('player2', '0');
+
+
+const player1 = Player('Player 1', 'X');
+const player2 = Player('Player 2', '0');
 
 
 renderGameBoard();
@@ -115,4 +151,14 @@ gameBoardEl.addEventListener('click', (e) => {
     }
 });
 
+resetBtn.addEventListener('click', (e) => {
+    e.preventDefault;
+    let activeEls = document.querySelectorAll('.active');
+    gameBoard.reset();
+    GameController.reset();
+    for (let el of activeEls) {
+        el.classList.remove('active');
+    }
+    renderGameBoard();
+})
 
